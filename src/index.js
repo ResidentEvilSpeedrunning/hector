@@ -1,7 +1,7 @@
 import 'environment';
 
 import { Client as DiscordClient } from 'discord.js';
-import { handleStreams } from 'dispatch';
+import handleStreams from 'dispatch';
 
 const client = new DiscordClient();
 
@@ -10,7 +10,7 @@ client.on('ready', () => {
 });
 
 client.on('presenceUpdate', async (oldPresence, newPresence) => {
-  await handleStreams(newPresence, client);
+  await handleStreams(newPresence);
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);

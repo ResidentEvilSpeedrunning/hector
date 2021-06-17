@@ -1,6 +1,6 @@
 import { STREAMING_ROLE_ID } from './constants';
 
-export const handleStreams = async (presence, client) => {
+const handleStreams = async presence => {
   // Alias a few things from deep in this tree
   const isStreaming = presence.activities.some(a => a.type === 'STREAMING');
   const streamActivity = presence.activities.find(a => a.type === 'STREAMING');
@@ -24,3 +24,5 @@ export const handleStreams = async (presence, client) => {
     }
   }
 };
+
+export default handleStreams;
