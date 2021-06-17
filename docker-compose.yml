@@ -8,5 +8,3 @@ services:
       - .:/code
       - /code/node_modules
       - /code/lib
-  db:
-    image: mongo
