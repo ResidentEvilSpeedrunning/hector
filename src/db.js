@@ -1,14 +1,14 @@
 import { MongoClient } from 'mongodb';
 
 const db = (async () => {
-  const client = new MongoClient('mongodb://db:27017/sheepobot', {
+  const client = new MongoClient('mongodb://db:27017/hectorbot', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 
   await client.connect();
 
-  return client.db('sheepobot');
+  return client.db('hectorbot');
 })();
 
 export const getCollection = async collName => {

@@ -1,12 +1,12 @@
 import 'environment';
 
-import every from 'every.js';
 import { Client as DiscordClient } from 'discord.js';
 import whisparse from 'whisparse';
 
-import notifyNewStreams from 'scheduled';
 import { getCollection, getNextSequence, findCommand } from 'db';
 import { wrapHandlerFunc, getPermissionsLevel } from 'utils';
+
+import { handleStreams } from 'dispatch';
 
 import handlers from 'handlers';
 
@@ -17,20 +17,9 @@ client.on('ready', () => {
   console.log('Ret-2-go!');
 });
 
-const countSheepo = async message => {
-  if (message.content.toLowerCase().includes('sheepo')) {
-    const count = await getNextSequence('sheepo');
-    const prelude = `We have now said Sheepo ${count} times!`;
-
-    if (count === 420) {
-      message.channel.send(`${prelude} *Nice.*`);
-    }
-
-    if (count % 100 === 0) {
-      message.channel.send(prelude);
-    }
-  }
-};
+client.on('presenceUpdate', async (oldPresence, newPresence) => {
+  await handleStreams(newPresence, client);
+});
 
 client.on('message', async message => {
   if (message.author.bot) {
@@ -38,8 +27,6 @@ client.on('message', async message => {
   }
 
   const parsed = whisparse(message.content);
-
-  await countSheepo(message);
 
   if (!parsed) {
     return;
@@ -64,10 +51,6 @@ client.on('message', async message => {
       reply: msg => message.reply(msg),
     });
   }
-});
-
-every(`${checkInterval} seconds`, () => {
-  notifyNewStreams(client)().catch(console.log);
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);

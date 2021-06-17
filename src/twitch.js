@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { config as dotenvConfig } from 'dotenv';
-import { TWITCH_GAME_ID } from './constants';
 
 dotenvConfig();
 
@@ -27,9 +26,16 @@ class TwitchAPI {
       const response = await this.getToken();
       const authToken = response.data.access_token;
 
+      const gameResponse = await axios.get(
+        'https://api.twitch.tv/helix/games?name=Resident%20Evil%20Village',
+        { headers: { ...HEADERS, Authorization: `Bearer ${authToken}` } },
+      );
+
+      const gameId = gameResponse.data.data[0].id;
+
       return axios.get('https://api.twitch.tv/helix/streams', {
         params: {
-          game_id: TWITCH_GAME_ID,
+          game_id: gameId,
         },
         headers: { ...HEADERS, Authorization: `Bearer ${authToken}` },
       });
